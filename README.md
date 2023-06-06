@@ -49,7 +49,7 @@ pip install -r requirements.txt
 模型权重（7b版本）已在我们的 [Huggingface 模型仓库](https://huggingface.co/wenge-research) 开源，欢迎下载使用。以下是一个简单调用 `yayi-7b` 进行下游任务推理的示例代码，可在单张 A100/A800/3090 等GPU运行，使用FP16精度推理时约占用 20GB 显存：
 
 ```python
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
 
 yayi_7b_path = "wenge-research/yayi-7b"
 tokenizer = AutoTokenizer.from_pretrained(yayi_7b_path)
@@ -84,9 +84,9 @@ class KeywordsStoppingCriteria(StoppingCriteria):
 ```
 
 ```python
-stop_criteria_7b = KeywordsStoppingCriteria([yayi_7b_tokenizer.encode(w)[0] for w in ["<|End|>"]])
+stop_criteria = KeywordsStoppingCriteria([tokenizer.encode(w)[0] for w in ["<|End|>"]])
 ...
-response = model.generate(**inputs, generation_config=generation_config, stop_criteria=stop_criteria_7b)
+response = model.generate(**inputs, generation_config=generation_config, stop_criteria=stop_criteria)
 ```
 
 ### 模型微调
