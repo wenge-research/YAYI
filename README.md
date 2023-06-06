@@ -50,6 +50,7 @@ pip install -r requirements.txt
 
 ```python
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
+import torch
 
 yayi_7b_path = "wenge-research/yayi-7b"
 tokenizer = AutoTokenizer.from_pretrained(yayi_7b_path)
@@ -57,7 +58,7 @@ model = AutoModelForCausalLM.from_pretrained(yayi_7b_path, device_map="auto", to
 
 prompt = "你好"
 formatted_prompt = f"<|System|>:\nA chat between a human and an AI assistant named YaYi.\nYaYi is a helpful and harmless language model developed by Beijing Wenge Technology Co.,Ltd.\n\n<|Human|>:\n{prompt}\n\n<|YaYi|>:"
-inputs = tokenizer.encode(prompt, return_tensors="pt").to(model.device)
+inputs = tokenizer.encode(formatted_prompt, return_tensors="pt").to(model.device)
 
 generation_config = GenerationConfig(
     do_sample=True,
@@ -67,7 +68,7 @@ generation_config = GenerationConfig(
     no_repeat_ngram_size=0
 )
 response = model.generate(**inputs, generation_config=generation_config)
-print(tokenizer.decode(outputs[0]))
+print(tokenizer.decode(response[0]))
 ```
 
 注意，模型训练时添加了 special token `<|End|>` 作为结束符，上述代码在生成式若不能自动停止，可定义 `KeywordsStoppingCriteria` 类，并将其对象传参至 `model.generate()` 函数。
