@@ -74,6 +74,8 @@ print(tokenizer.decode(response[0]))
 注意，模型训练时添加了 special token `<|End|>` 作为结束符，上述代码在生成式若不能自动停止，可定义 `KeywordsStoppingCriteria` 类，并将其对象传参至 `model.generate()` 函数。
 
 ```python
+from transformers import StoppingCriteria, StoppingCriteriaList
+
 class KeywordsStoppingCriteria(StoppingCriteria):
     def __init__(self, keywords_ids:list):
         self.keywords = keywords_ids
@@ -86,8 +88,8 @@ class KeywordsStoppingCriteria(StoppingCriteria):
 
 ```python
 stop_criteria = KeywordsStoppingCriteria([tokenizer.encode(w)[0] for w in ["<|End|>"]])
-...
-response = model.generate(**inputs, generation_config=generation_config, stop_criteria=stop_criteria)
+response = model.generate(**inputs, generation_config=generation_config, stopping_criteria=StoppingCriteriaList([stop_criteria]))
+print(tokenizer.decode(response[0]))
 ```
 
 ### 模型微调
