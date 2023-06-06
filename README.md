@@ -60,7 +60,10 @@ prompt = "你好"
 formatted_prompt = f"<|System|>:\nA chat between a human and an AI assistant named YaYi.\nYaYi is a helpful and harmless language model developed by Beijing Wenge Technology Co.,Ltd.\n\n<|Human|>:\n{prompt}\n\n<|YaYi|>:"
 inputs = tokenizer(formatted_prompt, return_tensors="pt").to(model.device)
 
+eos_token_id = tokenizer("<|End|>").input_ids[0]
 generation_config = GenerationConfig(
+    eos_token_id=eos_token_id,
+    pad_token_id=eos_token_id,
     do_sample=True,
     max_new_tokens=100,
     temperature=0.3,
@@ -71,26 +74,7 @@ response = model.generate(**inputs, generation_config=generation_config)
 print(tokenizer.decode(response[0]))
 ```
 
-注意，模型训练时添加了 special token `<|End|>` 作为结束符，上述代码在生成式若不能自动停止，可定义 `KeywordsStoppingCriteria` 类，并将其对象传参至 `model.generate()` 函数。
-
-```python
-from transformers import StoppingCriteria, StoppingCriteriaList
-
-class KeywordsStoppingCriteria(StoppingCriteria):
-    def __init__(self, keywords_ids:list):
-        self.keywords = keywords_ids
-
-    def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs) -> bool:
-        if input_ids[0][-1] in self.keywords:
-            return True
-        return False
-```
-
-```python
-stop_criteria = KeywordsStoppingCriteria([tokenizer.encode(w)[0] for w in ["<|End|>"]])
-response = model.generate(**inputs, generation_config=generation_config, stopping_criteria=StoppingCriteriaList([stop_criteria]))
-print(tokenizer.decode(response[0]))
-```
+注意，模型训练时添加了 special token `<|End|>` 作为结束符，因此上述代码 `GenerationConfig` 里将 `eos_token_id` 设置为该结束符对应的 token id。
 
 ### 模型微调
 
