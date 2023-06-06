@@ -58,7 +58,7 @@ model = AutoModelForCausalLM.from_pretrained(yayi_7b_path, device_map="auto", to
 
 prompt = "你好"
 formatted_prompt = f"<|System|>:\nA chat between a human and an AI assistant named YaYi.\nYaYi is a helpful and harmless language model developed by Beijing Wenge Technology Co.,Ltd.\n\n<|Human|>:\n{prompt}\n\n<|YaYi|>:"
-inputs = tokenizer.encode(formatted_prompt, return_tensors="pt").to(model.device)
+inputs = tokenizer(formatted_prompt, return_tensors="pt").to(model.device)
 
 generation_config = GenerationConfig(
     do_sample=True,
