@@ -160,7 +160,7 @@ def preprocess_dataset(tokenizer: AutoTokenizer, max_length: int, seed=DEFAULT_S
         batched=True,
         remove_columns=["instruction", "input", "output", "text"],
     )
-    logger.info("datasets after processing:", dataset)
+    logger.info(f"datasets after processing: {dataset}")
 
     # Make sure we don't have any truncated records, as this would mean the end keyword is missing.
     logger.info("Processed dataset has %d rows", dataset.num_rows)
@@ -221,10 +221,11 @@ def train(
         logger.info(f"Using default max length: {max_length}")
 
     # Data processing
-    try:
-        split_dataset = load_from_disk(data_path.replace(".json",""))
+    hf_data_dir = data_path.replace(".json","")
+    if os.path.exists(hf_data_dir):
         logger.info("Load dataset from cache.")
-    except:
+        split_dataset = load_from_disk(hf_data_dir)
+    else:
         logger.info("Load dataset from disk.")
         processed_dataset = preprocess_dataset(tokenizer=tokenizer, max_length=max_length, seed=seed, path_or_dataset=data_path)
         split_dataset = processed_dataset.train_test_split(test_size=test_size, seed=seed)

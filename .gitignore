@@ -131,4 +131,4 @@ dmypy.json
 .DS_Store
 
 # others
-.checkpoints/
+checkpoints/*
