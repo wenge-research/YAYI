@@ -139,7 +139,7 @@ deepspeed --num_gpus=8 \
 本项目中的代码依照 [Apache-2.0](LICENSE) 协议开源，数据采用 [CC BY-NC 4.0](LICENSE_DATA) 协议，YaYi 系列模型权重的使用则需要遵循 [Model License](LICENSE_MODEL)。
 
 ## 更新日志
-- [2023/07/22] 更新中文领域知识增强的 YaYi-6B-Llama2 和 YaYi-13B-Llama2 模型权重。
+- [2023/07/22] 更新中文领域知识增强的 YaYi-7B-Llama2 和 YaYi-13B-Llama2 模型权重。
 - [2023/07/14] 升级模型安全性和拒识能力，新增模型 int8 量化。
 - [2023/06/29] 升级和优化中英文多轮对话能力。
 - [2023/06/03] 雅意大模型正式对外发布并开源 7B 版本模型权重。
