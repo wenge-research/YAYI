@@ -91,53 +91,94 @@ print(tokenizer.decode(response[0]))
 
 ### 模型微调
 
-本项目基于 `deepspeed` 框架进行模型训练，配置完环境后执行以下命令行即可开始全参数微调模型（单机多卡）。
+本项目基于 `deepspeed` 框架进行模型训练，配置完环境后执行相应脚本即可开始训练。支持指令数据全参数微调、指令数据LoRA微调、多轮对话数据全参数微调、多轮对话数据LoRA微调。
 
-```
-deepspeed --num_gpus=8 \
-    --module training.trainer \
-    --data-path ./data/yayi_train_example.json \
-    --input-model ./checkpoints/yayi-7b \
-    --deepspeed ./config/deepspeed_zero2_bf16.json \
-    --epochs 2 \
-    --local-output-dir ./checkpoints \
-    --per-device-train-batch-size 8 \
-    --per-device-eval-batch-size 8 \
-    --logging-steps 1 \
-    --save-steps 100 \
-    --save-total-limit 10 \
-    --eval-steps 100 \
-    --warmup-steps 100 \
-    --test-size 400 \
-    --lr 5e-7 \
-    --seed 515
-```
+#### 1. 指令数据全参数微调
 
-此外，本项目还开源了多轮对话训练代码 (`training/trainer_multi_rounds.py`)、多轮示例数据格式 (`data/yayi_train_example_multi_rounds.json`)，执行以下命令即可开始全参数微调模型的多轮对话能力。
+- **数据格式**：参考 [`data/yayi_train_example.json`](data/yayi_train_example.json)，采用 Alpaca 项目的 jsonline 数据格式，每行一条 json 数据，由 `"instruction"`、`"input"`、`"output"` 三个字段组成。其中 `"instruction"` 和 `"input"` 为指令输入，`"output"` 为输出答案。
+- **运行说明**：运行以下命令即可开始全参数微调雅意大模型。该命令支持单机多卡训练，如需配置多机多卡训练，可参考 deepspeed 官方文档。建议使用 4*A100(80G) 以上硬件配置。
 
-```
-deepspeed --num_gpus=8 \
-    --module training.trainer_multi_rounds \
-    --data-path ./data/yayi_train_example_multi_rounds.json \
-    --input-model ./checkpoints/yayi-7b \
-    --deepspeed ./config/deepspeed_zero2_bf16.json \
-    --epochs 2 \
-    --local-output-dir ./checkpoints \
-    --per-device-train-batch-size 8 \
-    --per-device-eval-batch-size 8 \
-    --logging-steps 1 \
-    --save-steps 100 \
-    --save-total-limit 10 \
-    --eval-steps 100 \
-    --warmup-steps 100 \
-    --test-size 400 \
-    --lr 5e-7 \
-    --seed 515
-```
+    ```
+    deepspeed --num_gpus=8 \
+        --module training.trainer \
+        --data-path ./data/yayi_train_example.json \
+        --input-model ./checkpoints/yayi-7b \
+        --deepspeed ./config/deepspeed_zero2_bf16.json \
+        --epochs 2 \
+        --local-output-dir ./checkpoints \
+        --per-device-train-batch-size 8 \
+        --per-device-eval-batch-size 8 \
+        --logging-steps 1 \
+        --save-steps 100 \
+        --save-total-limit 10 \
+        --eval-steps 100 \
+        --warmup-steps 100 \
+        --test-size 400 \
+        --lr 5e-6 \
+        --seed 515
+    ```
+
+#### 2. 指令数据 LoRA 微调
+
+- **数据格式**：同上，参考 [`data/yayi_train_example.json`](data/yayi_train_example.json)。
+- **运行说明**：LoRA 是一种低资源高效微调方法，单卡可训练百亿参数模型。本项目主要基于 [`peft`](https://huggingface.co/docs/peft/index) 实现 LoRA 微调，运行以下命令即可开始 LoRA 微调雅意大模型。使用单卡 A100(80G) 即可完成微调，学习率可调整为较大值。其中，`--lora-dim` 设置更新矩阵的秩，该值越大，训练的参数量越大；`--lora-module-name` 设置 LoRA 更新矩阵的模块，可根据模型类型更改。
+
+    ```
+    deepspeed --num_gpus=1 \
+        --module training.trainer_lora \
+        --data-path ./data/yayi_train_example.json \
+        --input-model ./checkpoints/yayi-7b \
+        --deepspeed ./config/deepspeed_zero2_bf16.json \
+        --epochs 2 \
+        --local-output-dir ./checkpoints \
+        --per-device-train-batch-size 8 \
+        --per-device-eval-batch-size 8 \
+        --logging-steps 1 \
+        --save-steps 100 \
+        --save-total-limit 10 \
+        --eval-steps 100 \
+        --warmup-steps 100 \
+        --test-size 400 \
+        --lr 5e-4 \
+        --seed 515 \
+        --lora-dim 16 \
+        --lora-module-name query_key_value
+    ```
+
+#### 3. 多轮对话数据全参数微调
+
+- **数据格式**：参考 [`data/yayi_train_example_multi_rounds.json`](data/yayi_train_example_multi_rounds.json)，是一个标准 JSON 文件，每条数据由 `"system"` 和 `"conversations"`组成，其中 `"system"` 为全局角色设定信息，可为空字符串，`"conversations"` 是由 human 和 yayi 两种角色交替进行的多轮对话内容。
+- **运行说明**：运行以下命令即可开始全参数微调雅意大模型，对于多轮对话数据，仅计算模型生成回复的loss。该命令支持单机多卡训练，如需配置多机多卡训练，可参考 deepspeed 官方文档。建议使用 4*A100(80G) 以上硬件配置。
+
+    ```
+    deepspeed --num_gpus=8 \
+        --module training.trainer_multi_rounds \
+        --data-path ./data/yayi_train_example_multi_rounds.json \
+        --input-model ./checkpoints/yayi-7b \
+        --deepspeed ./config/deepspeed_zero2_bf16.json \
+        --epochs 2 \
+        --local-output-dir ./checkpoints \
+        --per-device-train-batch-size 8 \
+        --per-device-eval-batch-size 8 \
+        --logging-steps 1 \
+        --save-steps 100 \
+        --save-total-limit 10 \
+        --eval-steps 100 \
+        --warmup-steps 100 \
+        --test-size 400 \
+        --lr 5e-7 \
+        --seed 515
+    ```
+
+#### 4. 多轮对话数据 LoRA 微调
+
+- **数据格式**：同上，参考 [`data/yayi_train_example_multi_rounds.json`](data/yayi_train_example_multi_rounds.json)。
+- **运行说明**：参考多轮对话数据全参数微调的数据加载方式，以及指令数据 LoRA 微调方式。
+
 
 ## 训练数据
 
-雅意大模型基于中科闻歌百万级高质量领域指令微调数据集训练而来，我们本次开源 5w 条训练数据集，可在我们的 [Huggingface 数据仓库](https://huggingface.co/wenge-research) 下载。数据集主要涵盖了金融、安全、舆情、媒体等几大领域，我们为各领域任务大部分指令数据添加了离散 prompt 前缀，以区分各领域数据。
+雅意大模型基于中科闻歌百万级高质量领域指令微调数据集训练而来，我们本次开源 5w 条训练数据集，可在我们的 [Huggingface 数据仓库](https://huggingface.co/wenge-research) 下载。数据集主要涵盖了金融、安全、舆情、媒体等几大领域，我们为各领域任务大部分指令数据添加了离散 prompt 前缀，以区分各领域数据。此外，训练数据中还包含部分安全增强数据、插件能力数据、多轮对话数据等。
 
 
 ## 相关协议
@@ -147,7 +188,7 @@ deepspeed --num_gpus=8 \
 
 1. 在涉及事实性的指令上可能会产生违背事实的错误回答。
 2. 对于具备危害性的指令无法很好的鉴别，可能会产生危害性言论。
-3. 在一些涉及推理、代码、多轮对话等场景下模型的能力仍有待提高。
+3. 在一些涉及逻辑推理、代码生成、科学计算等场景下模型的能力仍有待提高。
 
 ### 免责声明
 
@@ -160,7 +201,7 @@ deepspeed --num_gpus=8 \
 本项目中的代码依照 [Apache-2.0](LICENSE) 协议开源，数据采用 [CC BY-NC 4.0](LICENSE_DATA) 协议，YaYi 系列模型权重的使用则需要遵循 [Model License](LICENSE_MODEL)。
 
 ## 更新日志
-- [2023/08/09] 更新多轮对话格式数据训练脚本。
+- [2023/08/09] 更新LoRA微调代码以及多轮对话格式数据训练代码。
 - [2023/07/22] 更新中文领域知识增强的 YaYi-7B-Llama2 和 YaYi-13B-Llama2 模型权重。
 - [2023/07/14] 升级模型安全性和拒识能力，新增模型 int8 量化。
 - [2023/06/29] 升级和优化中英文多轮对话能力。
