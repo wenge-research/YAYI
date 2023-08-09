@@ -87,11 +87,11 @@ response = model.generate(**inputs, generation_config=generation_config)
 print(tokenizer.decode(response[0]))
 ```
 
-注意，模型训练时添加了 special token `<|End|>` 作为结束符，因此上述代码 `GenerationConfig` 里将 `eos_token_id` 设置为该结束符对应的 token id。
+注意，模型训练时添加了 special token `<|End|>` 作为结束符，因此上述代码 `GenerationConfig` 里将 `eos_token_id` 设置为该结束符对应的 token id。基于 LlaMA2 指令微调模型的推理代码稍有不同，具体请参考我们的 [Huggingface 模型仓库](https://huggingface.co/wenge-research) 中的对应版本。
 
 ### 模型微调
 
-本项目基于 `deepspeed` 框架进行模型训练，配置完环境后执行以下命令行即可开始模型微调（单机多卡）。
+本项目基于 `deepspeed` 框架进行模型训练，配置完环境后执行以下命令行即可开始全参数微调模型（单机多卡）。
 
 ```
 deepspeed --num_gpus=8 \
@@ -113,6 +113,27 @@ deepspeed --num_gpus=8 \
     --seed 515
 ```
 
+此外，本项目还开源了多轮对话训练代码 (`training/trainer_multi_rounds.py`)、多轮示例数据格式 (`data/yayi_train_example_multi_rounds.json`)，执行以下命令即可开始全参数微调模型的多轮对话能力。
+
+```
+deepspeed --num_gpus=8 \
+    --module training.trainer_multi_rounds \
+    --data-path ./data/yayi_train_example_multi_rounds.json \
+    --input-model ./checkpoints/yayi-7b \
+    --deepspeed ./config/deepspeed_zero2_bf16.json \
+    --epochs 2 \
+    --local-output-dir ./checkpoints \
+    --per-device-train-batch-size 8 \
+    --per-device-eval-batch-size 8 \
+    --logging-steps 1 \
+    --save-steps 100 \
+    --save-total-limit 10 \
+    --eval-steps 100 \
+    --warmup-steps 100 \
+    --test-size 400 \
+    --lr 5e-7 \
+    --seed 515
+```
 
 ## 训练数据
 
@@ -139,6 +160,7 @@ deepspeed --num_gpus=8 \
 本项目中的代码依照 [Apache-2.0](LICENSE) 协议开源，数据采用 [CC BY-NC 4.0](LICENSE_DATA) 协议，YaYi 系列模型权重的使用则需要遵循 [Model License](LICENSE_MODEL)。
 
 ## 更新日志
+- [2023/08/09] 更新多轮对话格式数据训练脚本。
 - [2023/07/22] 更新中文领域知识增强的 YaYi-7B-Llama2 和 YaYi-13B-Llama2 模型权重。
 - [2023/07/14] 升级模型安全性和拒识能力，新增模型 int8 量化。
 - [2023/06/29] 升级和优化中英文多轮对话能力。
