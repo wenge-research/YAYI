@@ -85,7 +85,7 @@ def load_training_dataset__multi_rounds(path_or_dataset: str = "data/yayi_train_
         content_format = "\n{}\n\n"
         conversations = rec.get("conversations")
         system = rec.get("system",INTRO) 
-        system = system if system!="" else INTRO
+        system = system if system else INTRO
         dialogue_list = [INTRO_KEY+":",content_format.format(system)]
 
         for conversation in conversations:
