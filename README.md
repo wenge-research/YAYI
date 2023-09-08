@@ -6,11 +6,13 @@
 
 [![Code License](https://img.shields.io/badge/Code%20License-Apache_2.0-brightgreen.svg)](./LICENSE)
 [![Data License](https://img.shields.io/badge/Data%20License-CC_BY_NC_4.0-red.svg)](./LICENSE_DATA)
-[![Model License](https://img.shields.io/badge/Model%20License-YaYi_7B-blue.svg)](./LICENSE_MODEL)
+[![Model License](https://img.shields.io/badge/Model%20License-YaYi-blue.svg)](./LICENSE_MODEL)
 
 [[📖README](./README.md)] 
 [[🤗HF Repo](https://huggingface.co/wenge-research)]
 [[🔗网页端](https://yayi.wenge.com)]
+
+中文 | [English](./README_EN.md)
 
 </div>
 
