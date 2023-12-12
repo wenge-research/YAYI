@@ -1,12 +1,12 @@
 # 雅意大模型
 
 <div align="center">
-<img src="./assets/yayi_dark_small.png" alt="YaYi" style="width: 30%; display: block; margin: auto;">
+<img src="./assets/yayi_dark_small.png" alt="YAYI" style="width: 30%; display: block; margin: auto;">
 <br>
 
 [![Code License](https://img.shields.io/badge/Code%20License-Apache_2.0-brightgreen.svg)](./LICENSE)
 [![Data License](https://img.shields.io/badge/Data%20License-CC_BY_NC_4.0-red.svg)](./LICENSE_DATA)
-[![Model License](https://img.shields.io/badge/Model%20License-YaYi-blue.svg)](./LICENSE_MODEL)
+[![Model License](https://img.shields.io/badge/Model%20License-YAYI-blue.svg)](./LICENSE_MODEL)
 
 [[📖README](./README.md)] 
 [[🤗HF Repo](https://huggingface.co/wenge-research)]
@@ -200,11 +200,11 @@ print(tokenizer.decode(response[0]))
 
 ### 开源协议
 
-本项目中的代码依照 [Apache-2.0](LICENSE) 协议开源，数据采用 [CC BY-NC 4.0](LICENSE_DATA) 协议，YaYi 系列模型权重的使用则需要遵循 [Model License](LICENSE_MODEL)。
+本项目中的代码依照 [Apache-2.0](LICENSE) 协议开源，数据采用 [CC BY-NC 4.0](LICENSE_DATA) 协议，YAYI 系列模型权重的使用则需要遵循 [Model License](LICENSE_MODEL)。
 
 ## 更新日志
 - [2023/08/09] 更新LoRA微调代码以及多轮对话格式数据训练代码。
-- [2023/07/22] 更新中文领域知识增强的 YaYi-7B-Llama2 和 YaYi-13B-Llama2 模型权重。
+- [2023/07/22] 更新中文领域知识增强的 YAYI-7B-Llama2 和 YAYI-13B-Llama2 模型权重。
 - [2023/07/14] 升级模型安全性和拒识能力，新增模型 int8 量化。
 - [2023/06/29] 升级和优化中英文多轮对话能力。
 - [2023/06/03] 雅意大模型正式对外发布并开源 7B 版本模型权重。
@@ -216,4 +216,4 @@ print(tokenizer.decode(response[0]))
 
 
 ## Star History
-[![Star History Chart](https://api.star-history.com/svg?repos=wenge-research/YaYi&type=Date)](https://star-history.com/#wenge-research/YaYi&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=wenge-research/YAYI&type=Date)](https://star-history.com/#wenge-research/YAYI&Date)
