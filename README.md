@@ -29,9 +29,9 @@
 
 |  模型名称  | 🤗HF模型标识 |  下载地址  |
 | --------- | ---------    | --------- |
-|  YaYi-7B  | wenge-research/yayi-7b  | [模型下载](https://huggingface.co/wenge-research/yayi-7b)  |
-| YaYi-7B-Llama2 | wenge-research/yayi-7b-llama2 | [模型下载](https://huggingface.co/wenge-research/yayi-7b-llama2) |
-| YaYi-13B-Llama2 | wenge-research/yayi-13b-llama2 | [模型下载](https://huggingface.co/wenge-research/yayi-13b-llama2) |
+|  YAYI-7B  | wenge-research/yayi-7b  | [模型下载](https://huggingface.co/wenge-research/yayi-7b)  |
+| YAYI-7B-Llama2 | wenge-research/yayi-7b-llama2 | [模型下载](https://huggingface.co/wenge-research/yayi-7b-llama2) |
+| YAYI-13B-Llama2 | wenge-research/yayi-13b-llama2 | [模型下载](https://huggingface.co/wenge-research/yayi-13b-llama2) |
 
 
 
@@ -41,8 +41,8 @@
 1. 下载本仓库内容至本地/远程服务器
 
 ```bash
-git clone https://github.com/wenge-research/YaYi.git
-cd YaYi
+git clone https://github.com/wenge-research/YAYI.git
+cd YAYI
 ```
 
 2. 创建conda环境
