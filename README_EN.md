@@ -29,9 +29,9 @@ By open-sourcing the YaYi model, we will contribute our own efforts to the devel
 
 |  Model  | 🤗HF Model Name |  Download Links  |
 | --------- | ---------    | --------- |
-|  YaYi-7B  | wenge-research/yayi-7b  | [Download](https://huggingface.co/wenge-research/yayi-7b)  |
-| YaYi-7B-Llama2 | wenge-research/yayi-7b-llama2 | [Download](https://huggingface.co/wenge-research/yayi-7b-llama2) |
-| YaYi-13B-Llama2 | wenge-research/yayi-13b-llama2 | [Download](https://huggingface.co/wenge-research/yayi-13b-llama2) |
+|  YAYI-7B  | wenge-research/yayi-7b  | [Download](https://huggingface.co/wenge-research/yayi-7b)  |
+| YAYI-7B-Llama2 | wenge-research/yayi-7b-llama2 | [Download](https://huggingface.co/wenge-research/yayi-7b-llama2) |
+| YAYI-13B-Llama2 | wenge-research/yayi-13b-llama2 | [Download](https://huggingface.co/wenge-research/yayi-13b-llama2) |
 
 
 
@@ -41,8 +41,8 @@ By open-sourcing the YaYi model, we will contribute our own efforts to the devel
 1. Download this repository to your local/remote server.
 
 ```bash
-git clone https://github.com/wenge-research/YaYi.git
-cd YaYi
+git clone https://github.com/wenge-research/YAYI.git
+cd YAYI
 ```
 
 2. Create conda environment
@@ -203,10 +203,10 @@ The code in this project is open-source under the [Apache-2.0](LICENSE) license,
 
 ## Update log
 - [2023/08/09] Updated LoRA fine-tuning code and multi-turn dialogue format data training code.
-- [2023/07/22] Updated YaYi-7B-Llama2 and YaYi-13B-Llama2 model weights with enhanced Chinese domain knowledge.
+- [2023/07/22] Updated YAYI-7B-Llama2 and YAYI-13B-Llama2 model weights with enhanced Chinese domain knowledge.
 - [2023/07/14] Enhanced model security and anti-denial capabilities, introducing model int8 quantization.
 - [2023/06/29] Improved and optimized multi-turn dialogue capabilities in both Chinese and English.
-- [2023/06/03] Officially released and open-sourced the 7B version of the YaYi model.
+- [2023/06/03] Officially released and open-sourced the 7B version of the YAYI model.
 
 ## Acknowledgements
 - In this project, we used model weights from BigScience's [bloomz-7b1-mt](https://huggingface.co/bigscience/bloomz-7b1-mt) and Meta's [Llama 2](https://huggingface.co/meta-llama) series as initialization weights, along with vocabulary expansion.
@@ -215,4 +215,4 @@ The code in this project is open-source under the [Apache-2.0](LICENSE) license,
 
 
 ## Star History
-[![Star History Chart](https://api.star-history.com/svg?repos=wenge-research/YaYi&type=Date)](https://star-history.com/#wenge-research/YaYi&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=wenge-research/YAYI&type=Date)](https://star-history.com/#wenge-research/YAYI&Date)
